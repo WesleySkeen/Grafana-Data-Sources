@@ -47,14 +47,14 @@ static_configs:
       - targets: ['weather_forecast_api:5000']
 ```
 
-To confirm promethius can access the API metric scraping endpoint, browse to `http://localhost:9090/targets`. You should see 
+To confirm promethius can access the API metric scraping endpoint, browse to Browse to the [targets page](http://localhost:9090/targets). You should see 
 
 ![docs/promethius_targets.png](docs/promethius_targets.png)
 
 Notice that the `Status` is `UP`
 
 ### Grafana set up
-Browse to http://localhost:3000/datasources
+Browse to the [datasources page](http://localhost:3000/datasources)
 #### Promethius 
 Set the URL to http://prometheus:9090 and then click `Save & Test`
 
