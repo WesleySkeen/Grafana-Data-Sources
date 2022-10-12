@@ -17,6 +17,19 @@ services:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
     networks:
       - weather_forecast_network
+  
+  grafana:
+    image: grafana/grafana
+    #command:
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=P@ssw0rd
+    restart: always
+    ports:
+      - 3000:3000
+    volumes:
+      - ./grafana-data:/var/lib/grafana
+    networks:
+      - weather_forecast_network
 
 networks:
   weather_forecast_network:

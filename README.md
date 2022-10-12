@@ -49,6 +49,15 @@ static_configs:
 
 To confirm promethius can access the API metric scraping endpoint, browse to `http://localhost:9090/targets`. You should see 
 
-![docs/img.png](docs/img.png)
+![docs/promethius_targets.png](docs/promethius_targets.png)
 
 Notice that the `Status` is `UP`
+
+### Grafana set up
+Browse to http://localhost:3000/datasources
+#### Promethius 
+Set the URL to http://prometheus:9090 and then click `Save & Test`
+
+Then go to the [explore page](http://localhost:3000/explore) and select promethius as the data source. You should be able to access the metrics 
+
+![docs/promethius_metrics.png](docs/promethius_metrics.png)
