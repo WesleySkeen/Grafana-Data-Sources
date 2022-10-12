@@ -1,0 +1,22 @@
+version : '3'
+
+services:
+  weather_forecast_api:
+    image: weather_forecast_api
+    ports:
+      - 4000:5000
+    networks:
+      - weather_forecast_network
+  
+  prometheus:
+    image: prom/prometheus
+    restart: always
+    ports:
+      - 9090:9090
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    networks:
+      - weather_forecast_network
+
+networks:
+  weather_forecast_network:

@@ -2,8 +2,8 @@
 
 ### Build and run the api with docker on local port 4000
 ```shell
-> docker build --pull --no-cache -t weather_forcast_api -f ops/docker/Dockerfile .
-> docker run -p 4000:5000 --rm weather_forcast_api
+> docker build --pull --no-cache -t weather_forecast_api -f ops/docker/Dockerfile .
+> docker run -p 4000:5000 --rm weather_forecast_api
 ```
 
 You should now be able to view OTEL metrics from the API
@@ -23,3 +23,32 @@ process_runtime_dotnet_gc_collections_count{generation="gen0"} 0 1665568680770
 
 # EOF
 ```
+
+### Build and run the api with docker compose
+Using docker compose, we can combine multiple docker containers into a single deployment.
+These containers can communicate with each other since we can specify what network they can be added to.
+
+First build the image
+```shell
+> docker build --pull --no-cache -t weather_forecast_api -f ops/docker/Dockerfile .
+```
+Then in the docker folder (`ops/docker`), run
+```shell
+> docker-compose up
+```
+
+Among other things, this will bring up Promethius. We have set Promethius up to scrape metrics from the `/metrics` endpoint of the weather forecaset API.
+Notice in the `promethius.yml` file
+
+```yaml
+static_configs:      
+      # replace the IP with your local IP for development
+      # localhost is not it, as that is w/in the container :)
+      - targets: ['weather_forecast_api:5000']
+```
+
+To confirm promethius can access the API metric scraping endpoint, browse to `http://localhost:9090/targets`. You should see 
+
+![docs/img.png](docs/img.png)
+
+Notice that the `Status` is `UP`
