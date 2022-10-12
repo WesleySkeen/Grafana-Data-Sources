@@ -1,0 +1,16 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeatherForecast.Web.Api", "WeatherForecast.Web.Api\WeatherForecast.Web.Api.csproj", "{75641C5C-BE19-47BE-B57F-4BB3430D500D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{75641C5C-BE19-47BE-B57F-4BB3430D500D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{75641C5C-BE19-47BE-B57F-4BB3430D500D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{75641C5C-BE19-47BE-B57F-4BB3430D500D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75641C5C-BE19-47BE-B57F-4BB3430D500D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
