@@ -1,5 +1,6 @@
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
+using WeatherForecast.Web.Api;
 
 var builder = WebApplication.CreateBuilder(args);
 var port = 5000;
@@ -15,6 +16,9 @@ builder.WebHost.ConfigureKestrel(options =>
     options.ListenAnyIP(port);
 });
 
+SharedTelemetryUtilities.Init();
+SharedTelemetryUtilities.InitCounters();
+
 var rb = ResourceBuilder.CreateDefault().AddService("weather-forecast-api",
     serviceVersion: "1.0.0.0", serviceInstanceId: Environment.MachineName);
 builder.Services.AddOpenTelemetryMetrics(options =>
@@ -22,6 +26,8 @@ builder.Services.AddOpenTelemetryMetrics(options =>
     options.SetResourceBuilder(rb)
         .AddRuntimeInstrumentation()
         .AddHttpClientInstrumentation();
+    
+    options.AddMeter(SharedTelemetryUtilities.MeterName);
     
     options.AddPrometheusExporter();
 });	
