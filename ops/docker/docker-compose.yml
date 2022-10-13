@@ -58,6 +58,27 @@ services:
       - 9411:9411
     networks:
       - weather_forecast_network
+  
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    ports:
+      - "6831:6831/udp"
+      - "16686:16686"
+    networks:
+      - weather_forecast_network
+
+  hotrod:
+    image: jaegertracing/example-hotrod:latest
+    ports:
+      - "8080:8080"
+    command: [ "all" ]
+    environment:
+      - JAEGER_AGENT_HOST=jaeger
+      - JAEGER_AGENT_PORT=6831
+    networks:
+      - weather_forecast_network
+    depends_on:
+      - jaeger
 
 networks:
   weather_forecast_network:

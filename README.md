@@ -1,5 +1,7 @@
 # Grafana-Data-Sources
 
+***The current set up in this repo is very minimal. I am just touching the surface of what is possible. I wanted to demonstrate how to run the services locally***
+
 ### Build and run the api with docker on local port 4000
 ```shell
 > docker build --pull --no-cache -t weather_forecast_api -f ops/docker/Dockerfile .
@@ -82,3 +84,26 @@ Set the URL to http://loki:3100 and then click `Save & Test`
 Then go to the [explore page](http://localhost:3000/explore) and select loki as the data source. Under labels, select filename. You should have have a log file accessable.  
 
 ![docs/grafana_loki_logs.png](docs/grafana_loki_logs.png)
+
+## Traces
+
+In the endpoint `/WeatherForecast` I added some external calls to show traces in action. Once you make some calls to this endpoint, you will start to generate traces
+
+### Zipkin 
+Browse to [zipkin](http://localhost:9411) and click `RUN QUERY`. This should display some traces
+
+![docs/zipkin_list.png](docs/zipkin_list.png)
+
+Clicking one of these traces will give you more detail. As you can see, there is an over all request and the 2 external calls.
+
+![docs/zipkin_detail.png](docs/zipkin_detail.png)
+
+### Jaeger
+Browse to [Jaeger](http://localhost:16686), select a service and click `Find Traces`. This should display some traces
+
+![docs/jaeger_list.png](docs/jaeger_list.png)
+
+Similar to Zipkin, clicking on one of the traces will give more detail
+
+![docs/jaeger_detail.png](docs/jaeger_detail.png)
+

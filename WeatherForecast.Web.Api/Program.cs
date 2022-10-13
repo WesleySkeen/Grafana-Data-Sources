@@ -54,6 +54,7 @@ builder.Services.AddOpenTelemetryTracing(options =>
         .AddHttpClientInstrumentation();
     options.AddOtlpExporter(o => { o.Endpoint = zipkinUri; });
     options.AddZipkinExporter(o => { o.Endpoint = zipkinUri; });
+    options.AddJaegerExporter(o => { o.AgentHost = "jaeger"; o.AgentPort = 6831; });
 });
 
 var app = builder.Build();

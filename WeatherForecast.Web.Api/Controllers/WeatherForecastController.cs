@@ -25,7 +25,7 @@ public class WeatherForecastController : ControllerBase
     [HttpGet(Name = "GetWeatherForecast")]
     public async Task<IEnumerable<WeatherForecast>> Get()
     {
-        using var activity = SharedTelemetryUtilities.Writer.StartActivity("get_weather_external_1");
+        using var activity = SharedTelemetryUtilities.Writer.StartActivity("get_weather_forecasts");
         
         SharedTelemetryUtilities.RequestCounter.Add(1);
         var forecasts = Enumerable.Range(1, 5).Select(index => new WeatherForecast
