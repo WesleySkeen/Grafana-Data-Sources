@@ -51,6 +51,13 @@ services:
       - ./grafana-data:/var/lib/grafana
     networks:
       - weather_forecast_network
+  
+  zipkin:
+    image: openzipkin/zipkin
+    ports:
+      - 9411:9411
+    networks:
+      - weather_forecast_network
 
 networks:
   weather_forecast_network:

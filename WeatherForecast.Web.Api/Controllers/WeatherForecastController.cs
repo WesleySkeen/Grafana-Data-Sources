@@ -1,3 +1,4 @@
+using System.Net;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WeatherForecast.Web.Api.Controllers;
@@ -6,6 +7,8 @@ namespace WeatherForecast.Web.Api.Controllers;
 [Route("[controller]")]
 public class WeatherForecastController : ControllerBase
 {
+    private readonly HttpClient _httpClient = new();
+
     private static readonly string[] Summaries = new[]
     {
         "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
@@ -16,13 +19,15 @@ public class WeatherForecastController : ControllerBase
     public WeatherForecastController(ILogger<WeatherForecastController> logger)
     {
         _logger = logger;
+        _httpClient.BaseAddress = new Uri("https://api.open-meteo.com");
     }
 
     [HttpGet(Name = "GetWeatherForecast")]
-    public IEnumerable<WeatherForecast> Get()
+    public async Task<IEnumerable<WeatherForecast>> Get()
     {
+        using var activity = SharedTelemetryUtilities.Writer.StartActivity("get_weather_external_1");
+        
         SharedTelemetryUtilities.RequestCounter.Add(1);
-
         var forecasts = Enumerable.Range(1, 5).Select(index => new WeatherForecast
         {
             Date = DateTime.Now.AddDays(index),
@@ -32,6 +37,10 @@ public class WeatherForecastController : ControllerBase
         
         _logger.LogInformation("Max Celsius temperature was {temp}", forecasts.Max(x => x.TemperatureC));
         
+        // External calls to demonstrate tracing
+        await _httpClient.GetAsync("/v1/forecast?latitude=52.52&longitude=13.41&hourly=temperature_2m");
+        await _httpClient.GetAsync("/v1/forecast?latitude=52.52&longitude=13.41&hourly=temperature_2m");
+
         return forecasts.ToArray();
     }
 }

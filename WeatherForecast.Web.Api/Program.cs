@@ -1,10 +1,13 @@
 using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 using WeatherForecast.Web.Api;
 
 var builder = WebApplication.CreateBuilder(args);
 var port = 5000;
+var zipkinUri = new Uri("http://zipkin:9411/api/v2/spans");
+
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -40,6 +43,17 @@ builder.Host.ConfigureLogging(logging =>
         options.AddConsoleExporter();
     });
     logging.AddFile("../var/log/{Date}-local.log", isJson: true);
+});
+
+builder.Services.AddOpenTelemetryTracing(options =>
+{
+    options.AddSource(SharedTelemetryUtilities.TracerName);
+    options.SetResourceBuilder(rb).SetSampler(new AlwaysOnSampler())
+        .AddConsoleExporter()
+        .AddAspNetCoreInstrumentation()
+        .AddHttpClientInstrumentation();
+    options.AddOtlpExporter(o => { o.Endpoint = zipkinUri; });
+    options.AddZipkinExporter(o => { o.Endpoint = zipkinUri; });
 });
 
 var app = builder.Build();
