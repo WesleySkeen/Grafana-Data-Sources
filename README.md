@@ -53,16 +53,16 @@ To confirm promethius can access the API metric scraping endpoint, browse to Bro
 
 Notice that the `Status` is `UP`
 
-### Grafana set up
+## Grafana set up
 Browse to the [datasources page](http://localhost:3000/datasources)
-#### Promethius 
+### Promethius 
 Set the URL to http://prometheus:9090 and then click `Save & Test`
 
 Then go to the [explore page](http://localhost:3000/explore) and select promethius as the data source. You should be able to access the metrics 
 
 ![docs/promethius_metrics.png](docs/promethius_metrics.png)
 
-### Custom metrics
+#### Custom metrics
 As an example, I have added a custom meter counter that we can use to track the number of requests made to `/WeatherForecast`
 
 In `WeatherForecastController.cs` We have 
@@ -75,3 +75,10 @@ This will add a new metric with a name we have specified `data.request_counter`
 We can now view this custom metric in Grafana
 
 ![docs/grafana_custom_counter_metric.png](docs/grafana_custom_counter_metric.png)
+
+### Loki
+Set the URL to http://loki:3100 and then click `Save & Test`
+
+Then go to the [explore page](http://localhost:3000/explore) and select loki as the data source. Under labels, select filename. You should have have a log file accessable.  
+
+![docs/grafana_loki_logs.png](docs/grafana_loki_logs.png)

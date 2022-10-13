@@ -1,10 +1,10 @@
+using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using WeatherForecast.Web.Api;
 
 var builder = WebApplication.CreateBuilder(args);
 var port = 5000;
-var metricScraperUrl = $"http://localhost:{port}/metrics";
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -21,6 +21,7 @@ SharedTelemetryUtilities.InitCounters();
 
 var rb = ResourceBuilder.CreateDefault().AddService("weather-forecast-api",
     serviceVersion: "1.0.0.0", serviceInstanceId: Environment.MachineName);
+
 builder.Services.AddOpenTelemetryMetrics(options =>
 {
     options.SetResourceBuilder(rb)
@@ -30,7 +31,16 @@ builder.Services.AddOpenTelemetryMetrics(options =>
     options.AddMeter(SharedTelemetryUtilities.MeterName);
     
     options.AddPrometheusExporter();
-});	
+});
+
+builder.Host.ConfigureLogging(logging =>
+{
+    logging.AddOpenTelemetry(options =>
+    {
+        options.AddConsoleExporter();
+    });
+    logging.AddFile("../var/log/{Date}-local.log", isJson: true);
+});
 
 var app = builder.Build();
 
