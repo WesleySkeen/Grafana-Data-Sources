@@ -56,7 +56,12 @@ To confirm promethius can access the API metric scraping endpoint, browse to Bro
 Notice that the `Status` is `UP`
 
 ## Grafana set up
+
 Browse to the [datasources page](http://localhost:3000/datasources)
+> username : admin 
+
+> password : P@ssw0rd
+
 ### Promethius 
 Set the URL to http://prometheus:9090 and then click `Save & Test`
 
