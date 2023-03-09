@@ -16,12 +16,21 @@ scrape_configs:
           selector: '{app="api"}'
           stages:
             - regex:
-                expression: "(?P<sensitive>(?:\\d[ -]*?){13,16})"
+                expression: '(?P<sensitive_creditcard>(?:\d[ -]*?){13,16})'
+            - regex:
+                expression: '(?P<sensitive_email>([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+))'
+                
             - template:
-                source: sensitive
+                source: sensitive_creditcard
                 template: '{{ not (empty .Value) }}'
+            - template:
+                source: sensitive_email
+                template: '{{ not (empty .Value) }}'            
+                
             - labels:
-                sensitive:            
+                sensitive_creditcard:
+                sensitive_email:
+                  
     static_configs:
       - targets:
           - localhost
