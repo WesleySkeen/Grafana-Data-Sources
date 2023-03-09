@@ -19,7 +19,7 @@ scrape_configs:
                 expression: "(?P<sensitive>(?:\\d[ -]*?){13,16})"
             - template:
                 source: sensitive
-                template: '{{ kindIs "string" .Value }}'
+                template: '{{ not (empty .Value) }}'
             - labels:
                 sensitive:            
     static_configs:
