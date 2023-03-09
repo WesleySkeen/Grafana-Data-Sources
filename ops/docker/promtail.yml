@@ -15,13 +15,13 @@ scrape_configs:
           pipeline_name: "security"
           selector: '{app="api"}'
           stages:
+            - regex:
+                expression: "(?P<sensitive>(?:\\d[ -]*?){13,16})"
             - template:
                 source: sensitive
-                template: 'true'
+                template: '{{ .Value }}'
             - labels:
-                sensitive:
-            - regex:
-                expression: "(?P<cc_number>(?:\\d[ -]*?){13,16})"
+                sensitive:            
     static_configs:
       - targets:
           - localhost
