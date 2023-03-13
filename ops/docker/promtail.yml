@@ -10,27 +10,33 @@ clients:
 
 scrape_configs:
   - job_name: system
-    pipeline_stages:      
+    pipeline_stages:
       - match:
           pipeline_name: "security"
           selector: '{app="api"}'
           stages:
             - regex:
-                expression: '(?P<sensitive_creditcard>(?:\d[ -]*?){13,16})'
+                expression: '(?P<email>([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+))'
+            - template:
+                source: email
+                template: '{{ if not (empty .Value) }} true {{ end }}'
             - regex:
-                expression: '(?P<sensitive_email>([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+))'
-                
+                # this regex matches any 16 digits may need to update.
+                expression: '(?P<creditcard>(?:\d[ -]*?){13,16})'
             - template:
-                source: sensitive_creditcard
-                template: '{{ not (empty .Value) }}'
+                source: creditcard
+                template: '{{ if not (empty .Value) }} true {{ end }}'
+            - regex:
+                expression: '(?P<phone>(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4})'
             - template:
-                source: sensitive_email
-                template: '{{ not (empty .Value) }}'            
-                
+                source: phone
+                template: '{{ if not (empty .Value) }} true {{ end }}'
+            - template:
+                source: sensitive
+                template: '{{ or .email .creditcard .phone false }}'
             - labels:
-                sensitive_creditcard:
-                sensitive_email:
-                  
+                sensitive:
+    
     static_configs:
       - targets:
           - localhost
