@@ -1,6 +1,4 @@
-using System.Net;
 using Microsoft.AspNetCore.Mvc;
-using Serilog.Context;
 
 namespace WeatherForecast.Web.Api.Controllers;
 
@@ -24,14 +22,24 @@ public class WeatherForecastController : ControllerBase
     }
 
     [HttpGet(Name = "GetWeatherForecast")]
-    public async Task<string> Get(string data)
+    public async Task<IEnumerable<WeatherForecast>> Get()
     {
         using var activity = SharedTelemetryUtilities.Writer.StartActivity("get_weather_forecasts");
         
         SharedTelemetryUtilities.RequestCounter.Add(1);
+        var forecasts = Enumerable.Range(1, 5).Select(index => new WeatherForecast
+        {
+            Date = DateTime.Now.AddDays(index),
+            TemperatureC = Random.Shared.Next(-20, 55),
+            Summary = Summaries[Random.Shared.Next(Summaries.Length)]
+        });
         
-        _logger.LogInformation($"my data is {data}"); 
+        _logger.LogInformation("Max Celsius temperature was {temp}", forecasts.Max(x => x.TemperatureC));
         
-        return data;
+        // External calls to demonstrate tracing
+        await _httpClient.GetAsync("/v1/forecast?latitude=52.52&longitude=13.41&hourly=temperature_2m");
+        await _httpClient.GetAsync("/v1/forecast?latitude=52.52&longitude=13.41&hourly=temperature_2m");
+
+        return forecasts.ToArray();
     }
 }
